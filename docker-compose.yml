@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web_server_1:
+    build: ./app
+    environment:
+      - SERVER_NAME=Server-A-Termantap
+    ports:
+      - "3001:3000"
+
+  web_server_2:
+    build: ./app
+    environment:
+      - SERVER_NAME=Server-B-Tercepat
+    ports:
+      - "3002:3000"
+
+  web_server_3:
+    build: ./app
+    environment:
+      - SERVER_NAME=Server-C-Terkuat
+    ports:
+      - "3003:3000"
+
+  load_balancer:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx-least-connection.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - web_server_1
+      - web_server_2
+      - web_server_3
